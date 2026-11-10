@@ -212,7 +212,7 @@ async function drawMap(){
     const world=await response.json(),features=topojson.feature(world,world.objects.countries).features;
     const quizFeatures=features.filter(feature=>countryById(feature.id));
     const markerFeatures=COUNTRIES.filter(country=>country.marker).map(country=>({type:"Feature",geometry:{type:"Point",coordinates:country.marker}}));
-    projection.fitExtent([[38,28],[862,556]],{type:"FeatureCollection",features:[...quizFeatures,...markerFeatures]}); pathGenerator=d3.geoPath(projection);
+    projection.fitExtent([[12,6],[888,654]],{type:"FeatureCollection",features:[...quizFeatures,...markerFeatures]}); pathGenerator=d3.geoPath(projection);
     svg.append("path").datum(d3.geoGraticule().step([10,10])()).attr("class","ocean-lines").attr("d",pathGenerator); mapLayer=svg.append("g"); labelLayer=svg.append("g").attr("class","labels");
     const visible=features.filter(feature=>{ const [x,y]=pathGenerator.centroid(feature); return x>-100&&x<1000&&y>-100&&y<680; });
     mapLayer.selectAll("path").data(visible).join("path").attr("d",pathGenerator).attr("class",feature=>countryById(feature.id)?"quiz-country":"outside-country").attr("data-id",feature=>Number(feature.id))

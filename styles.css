@@ -135,7 +135,7 @@ body { background:var(--paper); color:var(--ink); }
 .topbar>.icon-button { display:none; }
 .hero { max-width:1180px; padding:30px 24px 70px; }
 .hero>.eyebrow,.hero>.hero-copy { display:none; }
-.game-shell { position:relative; display:block; min-height:720px; max-width:1080px; margin:auto; overflow:hidden; color:white; background:radial-gradient(circle at 50% 65%,#174a89 0,#0d2f65 38%,#081d4c 78%); border:12px solid white; border-radius:24px; box-shadow:0 22px 60px rgba(7,27,72,.22); }
+.game-shell { position:relative; display:block; min-height:810px; max-width:1080px; margin:auto; overflow:hidden; color:white; background:radial-gradient(circle at 50% 65%,#174a89 0,#0d2f65 38%,#081d4c 78%); border:12px solid white; border-radius:24px; box-shadow:0 22px 60px rgba(7,27,72,.22); }
 .game-shell::after { content:""; position:absolute; inset:0; z-index:0; pointer-events:none; background:linear-gradient(180deg,transparent 52%,rgba(3,14,41,.45)); }
 .game-toolbar { position:absolute; z-index:8; top:18px; left:20px; right:20px; display:flex; justify-content:space-between; align-items:center; }
 .toolbar-actions { display:flex; gap:10px; }
@@ -169,7 +169,7 @@ body { background:var(--paper); color:var(--ink); }
 .score-item { border-color:rgba(255,255,255,.18); }
 .score-item small { color:#9fb7dd; }
 .score-item.best strong { color:#ffd33d; }
-.map-wrap,#map { min-height:566px; }
+.map-wrap,#map { min-height:656px; }
 .map-wrap { background:#0d2b5d; }
 .ocean-lines { stroke:rgba(131,183,236,.15); }
 .outside-country { fill:#264a79; stroke:#173760; }
@@ -265,15 +265,15 @@ footer { background:#071b48; color:#aebfde; }
 .consent-card small { display:block; color:#77849e; text-align:center; }
 
 @media (max-width:900px) {
-  .game-shell { min-height:680px; }
+  .game-shell { min-height:750px; }
   .control-panel { border:0; }
   .mode-grid { grid-template-columns:repeat(3,92px); }
   .game-shell.is-playing .control-panel { border:0; }
-  .map-wrap,#map { min-height:526px; }
+  .map-wrap,#map { min-height:596px; }
 }
 @media (max-width:600px) {
   .hero { padding:14px 10px 45px; }
-  .game-shell { min-height:650px; border-width:6px; border-radius:15px; }
+  .game-shell { min-height:700px; border-width:6px; border-radius:15px; }
   .game-toolbar { top:12px; left:11px; right:11px; }
   .toolbar-button { padding:6px 10px; font-size:9px; }
   .control-panel { top:100px; width:96%; padding:24px 8px; }
@@ -282,7 +282,7 @@ footer { background:#071b48; color:#aebfde; }
   .mode-grid { grid-template-columns:repeat(3,88px); gap:7px; }
   .mode { height:100px; }
   .scorebar { margin-top:57px; padding:7px 8px; }
-  .map-wrap,#map { min-height:520px; }
+  .map-wrap,#map { min-height:570px; }
   .game-shell.is-playing .control-panel { top:59px; width:76%; padding:0 4px; }
   .game-shell.is-playing .prompt-card { padding:7px 10px; }
   .game-shell.is-playing .prompt-card strong { font-size:18px; }
