@@ -219,7 +219,7 @@ function renderMapForQuiz(){
   projection.rotate(activeQuiz.rotation||[0,0]);
   const quizFeatures=worldFeatures.filter(feature=>{ const country=countryById(feature.id); return country&&!country.fitMarker; });
   const markerFeatures=COUNTRIES.filter(country=>country.marker).map(country=>({type:"Feature",geometry:{type:"Point",coordinates:country.marker}}));
-  projection.fitExtent([[18,10],[882,650]],{type:"FeatureCollection",features:[...quizFeatures,...markerFeatures]}); pathGenerator=d3.geoPath(projection); graticuleLayer.attr("d",pathGenerator);
+  projection.fitExtent([[5,4],[895,656]],{type:"FeatureCollection",features:[...quizFeatures,...markerFeatures]}); pathGenerator=d3.geoPath(projection); graticuleLayer.attr("d",pathGenerator);
   mapLayer.selectAll("*").remove(); labelLayer.selectAll("*").remove();
   const visible=worldFeatures.filter(feature=>{ const [x,y]=pathGenerator.centroid(feature); return x>-120&&x<1020&&y>-120&&y<780; });
   mapLayer.selectAll("path").data(visible).join("path").attr("d",pathGenerator).attr("class",feature=>countryById(feature.id)?"quiz-country":"outside-country").attr("data-id",feature=>countryById(feature.id)?Number(feature.id):null)

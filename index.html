@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=contact3">
+  <link rel="stylesheet" href="styles.css?v=world2">
 </head>
 <body>
   <header class="topbar">
@@ -18,6 +18,7 @@
       <button class="nav-link active" data-scroll="game">Play</button>
       <button class="nav-link" data-scroll="progress">Progress</button>
       <button class="nav-link" data-scroll="about">Study guide</button>
+      <button class="nav-link" data-scroll="changelog">Changelog</button>
     </nav>
     <button class="icon-button" id="soundToggle" aria-label="Turn sound off" title="Sound on">♪</button>
   </header>
@@ -141,6 +142,24 @@
       </div>
       <div class="country-list" id="countryList"></div>
     </section>
+
+    <section class="changelog-section" id="changelog">
+      <div class="section-heading">
+        <div><span class="eyebrow">Project history</span><h2>Changelog</h2><p>Every major change since the site was created, listed from newest to oldest.</p></div>
+      </div>
+      <div class="changelog-list">
+        <article><time datetime="2026-11-09">November 9, 2026</time><div><h3>Larger maps and a focused North America quiz</h3><ul><li>Removed the Caribbean island countries from North America, leaving Canada, the United States, Mexico, and the seven Central American countries.</li><li>Enlarged the game area and tightened map framing across every quiz.</li></ul></div></article>
+        <article><time datetime="2026-11-09">November 9, 2026</time><div><h3>World country quizzes</h3><ul><li>Added North America, South America, Europe, Africa, Oceania, and All Asia.</li><li>Added East, South, Southeast, Central, and West Asia region quizzes while preserving Monsoon Asia.</li><li>Added the Choose Map menu, dynamic study lists, tiny-country markers, and separate records for each map.</li></ul></div></article>
+        <article><time datetime="2026-11-09">November 9, 2026</time><div><h3>Map size, agreement, and search verification</h3><ul><li>Enlarged the map while keeping every Monsoon Asia country visible.</li><li>Added the site owner’s right to remove the website if the agreement is broken.</li><li>Added Google site verification for the published site.</li></ul></div></article>
+        <article><time datetime="2026-11-04">November 4, 2026</time><div><h3>Full-region map framing</h3><ul><li>Adjusted the projection so Indonesia, East Timor, and the rest of Monsoon Asia are no longer cut off.</li></ul></div></article>
+        <article><time datetime="2026-11-03">November 3, 2026</time><div><h3>Answer and accuracy improvements</h3><ul><li>After three misses, the correct country is revealed and must be clicked before continuing.</li><li>Extra clicks after the reveal no longer lower accuracy, while the revealed answer still earns partial accuracy credit.</li><li>Skip moves a country later without counting it wrong.</li></ul></div></article>
+        <article><time datetime="2026-11-03">November 3, 2026</time><div><h3>Contact links and footer</h3><ul><li>Added the contact notice below the map, in the footer, and in the agreement.</li><li>Linked grcarhart@bluevalleyk12.net directly to an Outlook compose window.</li><li>Fixed the footer so its updated content remains visible and navigable.</li></ul></div></article>
+        <article><time datetime="2026-11-03">November 3, 2026</time><div><h3>Required user agreement</h3><ul><li>Added the I Agree notice with academic-integrity, local-storage, and project-respect terms.</li><li>Added a three-second reading delay and made the agreement appear on every visit.</li><li>Fixed the agreement window so it stays open until accepted.</li></ul></div></article>
+        <article><time datetime="2026-11-03">November 3, 2026</time><div><h3>More modes and complete results</h3><ul><li>Added Place the Labels and 60-second Sprint modes.</li><li>Added the detailed end screen with completion date, time, score, percentage, mistakes, and mode.</li><li>Improved the label tray so it does not block the bottom of the map.</li></ul></div></article>
+        <article><time datetime="2026-11-03">November 3, 2026</time><div><h3>Seterra-inspired redesign</h3><ul><li>Rebuilt the site around a map-first game flow with Pin, Type, and Learn modes.</li><li>Added live score, accuracy, timer, best score, saved attempts, and daily streaks.</li><li>Added the study guide and responsive desktop/mobile styling.</li></ul></div></article>
+        <article><time datetime="2026-11-03">November 3, 2026</time><div><h3>Project created</h3><ul><li>Built and published the original interactive Monsoon Asia geography quiz.</li></ul></div></article>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer" id="siteFooter">
@@ -169,7 +188,7 @@
   </section>
   <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-  <script src="quiz-data.js?v=world1"></script>
-  <script src="app.js?v=world1"></script>
+  <script src="quiz-data.js?v=world2"></script>
+  <script src="app.js?v=world2"></script>
 </body>
 </html>

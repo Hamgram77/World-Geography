@@ -22,12 +22,13 @@ const byRegion = region => COUNTRY_DATA.filter(country=>country.region===region)
 const regions = (...names) => names.flatMap(byRegion);
 const byContinent = continent => COUNTRY_DATA.filter(country=>country.region===continent);
 const monsoonNames = new Set(["Bangladesh","Bhutan","Brunei","Cambodia","China","East Timor","India","Indonesia","Japan","Laos","Malaysia","Maldives","Mongolia","Myanmar","Nepal","North Korea","Philippines","Singapore","South Korea","Sri Lanka","Taiwan","Thailand","Vietnam"]);
+const mainlandNorthAmericaNames = new Set(["Canada","United States","Mexico","Belize","Costa Rica","El Salvador","Guatemala","Honduras","Nicaragua","Panama"]);
 const asiaRegions = ["East Asia","South Asia","Southeast Asia","Central Asia","West Asia"];
 
 const QUIZZES = [
   {id:"monsoon-asia",title:"Monsoon Asia",subtitle:"23 countries across East, South, and Southeast Asia",icon:"🌏",group:"Asia regions",countries:COUNTRY_DATA.filter(country=>monsoonNames.has(country.name))},
   {id:"all-asia",title:"All Asia",subtitle:"All 49 countries of Asia",icon:"🌏",group:"Continents",countries:regions(...asiaRegions)},
-  {id:"north-america",title:"North America",subtitle:"23 independent countries",icon:"🌎",group:"Continents",countries:byContinent("North America")},
+  {id:"north-america",title:"North America",subtitle:"10 mainland countries",icon:"🌎",group:"Continents",countries:COUNTRY_DATA.filter(country=>mainlandNorthAmericaNames.has(country.name))},
   {id:"south-america",title:"South America",subtitle:"12 independent countries",icon:"🌎",group:"Continents",countries:byContinent("South America")},
   {id:"europe",title:"Europe",subtitle:"45 countries",icon:"🌍",group:"Continents",countries:byContinent("Europe")},
   {id:"africa",title:"Africa",subtitle:"54 independent countries",icon:"🌍",group:"Continents",countries:byContinent("Africa")},
