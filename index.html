@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="qNuObu2RHrX6sKwxbCZ5j013WckDOmJqqZO2w8SiCCM" />
-  <meta name="description" content="Learn the 23 countries of Monsoon Asia with an interactive map quiz.">
-  <title>Monsoon Atlas — Asia Map Quiz</title>
+  <meta name="description" content="Learn the countries of every continent and region of Asia with interactive map quizzes.">
+  <title>World Geography — Country Map Quizzes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Monsoon Asia Quiz home"><span class="brand-mark" aria-hidden="true">M</span><span>Monsoon Asia <b>Quiz</b></span></a>
+    <a class="brand" href="#" aria-label="World Geography home"><span class="brand-mark" aria-hidden="true">WG</span><span>World Geography <b>Quiz</b></span></a>
     <nav class="topnav" aria-label="Primary navigation">
       <button class="nav-link active" data-scroll="game">Play</button>
       <button class="nav-link" data-scroll="progress">Progress</button>
@@ -34,6 +34,7 @@
         <div class="game-toolbar">
           <button class="toolbar-button" data-scroll="about">← Study list</button>
           <div class="toolbar-actions">
+            <button class="toolbar-button map-choice-button" id="chooseQuizButton">Choose map</button>
             <button class="toolbar-button" id="toolbarLearn">Learn</button>
             <button class="toolbar-button icon-only" id="soundToggleGame" aria-label="Toggle sound">♪</button>
           </div>
@@ -41,7 +42,7 @@
         <aside class="control-panel">
           <div class="game-title-block">
             <span class="globe-mark" aria-hidden="true">🌏</span>
-            <h2>Monsoon Asia: Countries</h2>
+            <h2 id="quizTitle">Monsoon Asia: Countries</h2>
           </div>
           <div class="panel-label">Game mode</div>
           <div class="mode-grid" role="tablist" aria-label="Quiz mode">
@@ -69,7 +70,7 @@
           <button class="text-button hidden" id="skipButton">Skip this country</button>
         </aside>
 
-        <section class="map-panel" aria-label="Interactive map of Monsoon Asia">
+        <section class="map-panel" id="mapPanel" aria-label="Interactive country map">
           <div class="scorebar">
             <div class="score-item"><small>Score</small><strong><span id="scoreValue">0</span> / <span id="totalValue">23</span></strong></div>
             <div class="score-item"><small>Accuracy</small><strong id="accuracyValue">—</strong></div>
@@ -82,7 +83,14 @@
             <div class="map-tooltip hidden" id="mapTooltip"></div>
             <div class="result-toast hidden" id="resultToast" role="status" aria-live="polite"></div>
             <div class="label-tray hidden" id="labelTray" aria-label="Country labels to place"></div>
-            <div class="map-legend"><i></i> Monsoon Asia quiz area</div>
+            <div class="map-legend"><i></i> <span id="mapLegendText">Monsoon Asia quiz area</span></div>
+          </div>
+        </section>
+        <section class="quiz-picker hidden" id="quizPicker" aria-labelledby="quizPickerTitle">
+          <div class="quiz-picker-card">
+            <div class="quiz-picker-head"><div><span>Country quizzes</span><h2 id="quizPickerTitle">Choose your map</h2></div><button id="closeQuizPicker" aria-label="Close map chooser">×</button></div>
+            <p>Pick a continent, all of Asia, or one of Asia’s regions. Your game modes and progress work on every map.</p>
+            <div id="quizPickerGroups"></div>
           </div>
         </section>
         <section class="end-screen hidden" id="endScreen" aria-labelledby="endTitle">
@@ -127,9 +135,9 @@
 
     <section class="study-section" id="about">
       <div class="study-copy">
-        <span class="eyebrow">Study guide</span><h2>One region. Three geographic worlds.</h2>
-        <p>Monsoon Asia stretches from high mountain kingdoms to vast river plains and island chains. Use Learn mode to connect each country with its capital before testing yourself.</p>
-        <div class="region-chips"><span>East Asia · 6</span><span>South Asia · 6</span><span>Southeast Asia · 11</span></div>
+        <span class="eyebrow">Study guide</span><h2 id="studyTitle">Monsoon Asia countries</h2>
+        <p id="studyDescription">Use Learn mode to study each country before testing yourself in the quiz modes above.</p>
+        <div class="region-chips" id="regionChips"></div>
       </div>
       <div class="country-list" id="countryList"></div>
     </section>
@@ -138,12 +146,12 @@
   <footer class="site-footer" id="siteFooter">
     <p><strong>© 2026 Graham Carhart.</strong><br><span>All rights reserved.</span></p>
     <p>Notice a problem or want to request a change? Email me at:<br><a class="footer-email" href="https://outlook.office.com/mail/deeplink/compose?to=grcarhart%40bluevalleyk12.net" target="_blank" rel="noopener" aria-label="Email Graham in Outlook">grcarhart@bluevalleyk12.net</a></p>
-    <p>Monsoon Atlas · Built for geography practice · Progress stays on your device</p>
+    <p>World Geography · Built for geography practice · Progress stays on your device</p>
   </footer>
   <section class="consent-overlay" id="consentOverlay" role="dialog" aria-modal="true" aria-labelledby="consentTitle" aria-describedby="consentIntro">
     <div class="consent-card">
-      <span class="consent-mark" aria-hidden="true">M</span>
-      <h2 id="consentTitle">Welcome to Monsoon Atlas</h2>
+      <span class="consent-mark" aria-hidden="true">WG</span>
+      <h2 id="consentTitle">Welcome to World Geography</h2>
       <p id="consentIntro" class="consent-lead">An independent student project made by Graham Carhart.</p>
       <p>This website was entirely designed, coded, and built from scratch. Countless development hours went into this.</p>
       <p>By clicking <strong>“I Agree,”</strong> you acknowledge you understand and agree to the following terms:</p>
@@ -161,6 +169,7 @@
   </section>
   <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-  <script src="app.js?v=mapfit2"></script>
+  <script src="quiz-data.js?v=world1"></script>
+  <script src="app.js?v=world1"></script>
 </body>
 </html>

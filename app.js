@@ -1,28 +1,5 @@
-const COUNTRIES = [
-  { id:50,name:"Bangladesh",capital:"Dhaka",region:"South Asia",aliases:[] },
-  { id:64,name:"Bhutan",capital:"Thimphu",region:"South Asia",aliases:[] },
-  { id:96,name:"Brunei",capital:"Bandar Seri Begawan",region:"Southeast Asia",marker:[114.94,4.54],aliases:[] },
-  { id:116,name:"Cambodia",capital:"Phnom Penh",region:"Southeast Asia",aliases:[] },
-  { id:156,name:"China",capital:"Beijing",region:"East Asia",aliases:["People's Republic of China","PRC"] },
-  { id:626,name:"East Timor",capital:"Dili",region:"Southeast Asia",marker:[125.73,-8.87],aliases:["Timor-Leste","Timor Leste"] },
-  { id:356,name:"India",capital:"New Delhi",region:"South Asia",aliases:[] },
-  { id:360,name:"Indonesia",capital:"Jakarta",region:"Southeast Asia",aliases:[] },
-  { id:392,name:"Japan",capital:"Tokyo",region:"East Asia",aliases:[] },
-  { id:418,name:"Laos",capital:"Vientiane",region:"Southeast Asia",aliases:["Lao PDR"] },
-  { id:458,name:"Malaysia",capital:"Kuala Lumpur",region:"Southeast Asia",aliases:[] },
-  { id:462,name:"Maldives",capital:"Malé",region:"South Asia",marker:[73.5,3.2],aliases:[] },
-  { id:496,name:"Mongolia",capital:"Ulaanbaatar",region:"East Asia",aliases:[] },
-  { id:104,name:"Myanmar",capital:"Naypyidaw",region:"Southeast Asia",aliases:["Burma"] },
-  { id:524,name:"Nepal",capital:"Kathmandu",region:"South Asia",aliases:[] },
-  { id:408,name:"North Korea",capital:"Pyongyang",region:"East Asia",aliases:["DPRK"] },
-  { id:608,name:"Philippines",capital:"Manila",region:"Southeast Asia",aliases:[] },
-  { id:702,name:"Singapore",capital:"Singapore",region:"Southeast Asia",marker:[103.82,1.35],aliases:[] },
-  { id:410,name:"South Korea",capital:"Seoul",region:"East Asia",aliases:["Republic of Korea","Korea"] },
-  { id:144,name:"Sri Lanka",capital:"Sri Jayawardenepura Kotte",region:"South Asia",aliases:["Ceylon"] },
-  { id:158,name:"Taiwan",capital:"Taipei",region:"East Asia",aliases:[] },
-  { id:764,name:"Thailand",capital:"Bangkok",region:"Southeast Asia",aliases:[] },
-  { id:704,name:"Vietnam",capital:"Hanoi",region:"Southeast Asia",aliases:["Viet Nam"] }
-];
+let activeQuiz=QUIZZES.find(quiz=>quiz.id==="monsoon-asia");
+let COUNTRIES=activeQuiz.countries;
 
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
@@ -41,7 +18,30 @@ function beep(success=true){
 }
 
 function setupCountryList(){
-  $("#countryList").innerHTML=COUNTRIES.map((c,i)=>`<div class="country-card"><span class="country-number">${String(i+1).padStart(2,"0")}</span><span><b>${c.name}</b><small>${c.capital} · ${c.region}</small></span></div>`).join("");
+  $("#countryList").innerHTML=COUNTRIES.map((c,i)=>`<div class="country-card"><span class="country-number">${String(i+1).padStart(2,"0")}</span><span><b>${c.name}</b><small>${c.capital?`${c.capital} · `:""}${c.region}</small></span></div>`).join("");
+}
+
+function setupQuizPicker(){
+  const groups=["Continents","Asia regions"];
+  $("#quizPickerGroups").innerHTML=groups.map(group=>`<div class="quiz-group"><h3>${group}</h3><div class="quiz-grid">${QUIZZES.filter(quiz=>quiz.group===group).map(quiz=>`<button class="quiz-option ${quiz.id===activeQuiz.id?"active":""}" data-quiz-id="${quiz.id}"><span>${quiz.icon}</span><b>${quiz.title}</b><small>${quiz.subtitle}</small></button>`).join("")}</div></div>`).join("");
+  $$(".quiz-option").forEach(button=>button.addEventListener("click",()=>selectQuiz(button.dataset.quizId)));
+}
+
+function openQuizPicker(){ $("#quizPicker").classList.remove("hidden"); }
+function closeQuizPicker(){ $("#quizPicker").classList.add("hidden"); }
+
+function selectQuiz(id){
+  const quiz=QUIZZES.find(item=>item.id===id); if(!quiz)return;
+  activeQuiz=quiz; COUNTRIES=quiz.countries; setMode(state.mode); closeQuizPicker(); setupQuizPicker(); setupCountryList(); updateQuizCopy(); renderMapForQuiz();
+}
+
+function updateQuizCopy(){
+  $("#quizTitle").textContent=`${activeQuiz.title}: Countries`; $(".globe-mark").textContent=activeQuiz.icon;
+  $("#mapLegendText").textContent=`${activeQuiz.title} quiz area`; $("#map").setAttribute("aria-label",`Countries of ${activeQuiz.title}`); $("#mapPanel").setAttribute("aria-label",`Interactive map of ${activeQuiz.title}`);
+  $("#studyTitle").textContent=`${activeQuiz.title} countries`; $("#studyDescription").textContent=`Study all ${COUNTRIES.length} countries on this map, then test yourself in Pin, Type, Place Labels, Learn, or Sprint mode.`;
+  const counts=COUNTRIES.reduce((result,country)=>(result[country.region]=(result[country.region]||0)+1,result),{});
+  $("#regionChips").innerHTML=Object.entries(counts).map(([region,count])=>`<span>${region} · ${count}</span>`).join("");
+  updateScore(); updateBest();
 }
 
 function setupConsent(){
@@ -52,7 +52,7 @@ function setupConsent(){
   const timer=setInterval(()=>{
     remaining--;
     if(remaining>0){ button.textContent=`I Agree · ${remaining}`; countdown.textContent=`Please read the agreement. The button unlocks in ${remaining} ${remaining===1?"second":"seconds"}.`; return; }
-    clearInterval(timer); button.disabled=false; button.textContent="I Agree"; countdown.textContent="You may now accept and enter Monsoon Atlas."; button.focus();
+    clearInterval(timer); button.disabled=false; button.textContent="I Agree"; countdown.textContent="You may now accept and enter World Geography."; button.focus();
   },1000);
   button.addEventListener("click",()=>{
     if(button.disabled)return;
@@ -72,7 +72,7 @@ function setMode(mode){
   $("#labelTray").classList.add("hidden"); $("#labelTray").innerHTML="";
   $("#typeForm").classList.toggle("hidden",mode!=="type"); $("#skipButton").classList.add("hidden");
   $("#startButton").textContent=mode==="learn"?"Start learning":"Start quiz";
-  const copy={ learn:["Study mode","Select any country","Click the map to reveal its name and capital."],pin:["Pin mode","Ready to locate?","Find each named country on the map."],type:["Type mode","Ready to identify?","Name the country highlighted on the map."],labels:["Place the labels","Choose any country","Select a country label, then place it on the map."],sprint:["Sprint mode","60 seconds","Find as many countries as you can before time runs out."] }[mode];
+  const copy={ learn:["Study mode","Select any country","Click the map to reveal its name and details."],pin:["Pin mode","Ready to locate?","Find each named country on the map."],type:["Type mode","Ready to identify?","Name the country highlighted on the map."],labels:["Place the labels","Choose any country","Select a country label, then place it on the map."],sprint:["Sprint mode","60 seconds","Find as many countries as you can before time runs out."] }[mode];
   setPrompt(...copy); resetMapClasses(); updateScore(); updateBest();
 }
 
@@ -85,7 +85,7 @@ function startGame(){
   $(".game-shell").classList.add("is-playing");
   $("#startButton").textContent="Restart";
   if(state.mode==="learn"){
-    setPrompt("Study mode","Choose a country","Click anywhere in green to learn its capital."); COUNTRIES.forEach(addLabel);
+    setPrompt("Study mode","Choose a country","Click anywhere in blue to learn its name and region."); COUNTRIES.forEach(addLabel);
   } else { $("#skipButton").classList.remove("hidden"); beginTimer(); if(state.mode==="labels")renderLabelTray(); nextQuestion(); }
   if(state.mode==="sprint"){
     state.elapsed=60; clearInterval(state.timer); state.timer=setInterval(()=>{ state.elapsed--; updateScore(); if(state.elapsed<=0)finishGame(); },1000);
@@ -108,7 +108,7 @@ function nextQuestion(){
   state.current=state.order[state.index++];
   if(state.mode==="type"){
     highlightCountry(state.current,"target"); setPrompt("Name this country","Highlighted in amber",`Question ${state.index} of ${COUNTRIES.length}`); $("#typeAnswer").value=""; $("#typeAnswer").focus();
-  } else setPrompt(state.mode==="sprint"?"Quick—find":`Find · ${state.index} of ${COUNTRIES.length}`,state.current.name,`Capital: ${state.current.capital}`);
+  } else setPrompt(state.mode==="sprint"?"Quick—find":`Find · ${state.index} of ${COUNTRIES.length}`,state.current.name,state.current.capital?`Capital: ${state.current.capital}`:state.current.region);
 }
 
 function handleCountryClick(country){
@@ -135,7 +135,7 @@ function registerMiss(message){
   showToast(`The answer is ${answer.name}. Select it to continue.`,false);
 }
 
-function revealLearn(country){ resetMapClasses(); highlightCountry(country,"target"); addLabel(country); setPrompt(country.region,country.name,`${country.capital} is the capital.`); showToast(`${country.name} · ${country.capital}`,true); }
+function revealLearn(country){ resetMapClasses(); highlightCountry(country,"target"); addLabel(country); const detail=country.capital?`${country.capital} is the capital.`:`Region: ${country.region}.`; setPrompt(country.region,country.name,detail); showToast(`${country.name} · ${country.capital||country.region}`,true); }
 function checkTypedAnswer(event){
   event.preventDefault(); if(!state.active||state.mode!=="type")return;
   if(state.revealed.has(state.current.id)){ showToast(`Click the highlighted answer — ${state.current.name}.`,false); return; }
@@ -173,7 +173,7 @@ function updateLabelTray(){
 function finishGame(){
   if(!state.active)return; state.active=false; endTimers(); $("#skipButton").classList.add("hidden");
   const total=COUNTRIES.length,accuracy=state.attempts?Math.round(state.score/state.attempts*100):0,finishedAt=new Date(),mistakes=state.mistakes;
-  const attempt={mode:state.mode,score:state.score,total,accuracy,mistakes,seconds:state.mode==="sprint"?60:state.elapsed,date:finishedAt.toISOString()};
+  const attempt={quiz:activeQuiz.id,quizTitle:activeQuiz.title,mode:state.mode,score:state.score,total,accuracy,mistakes,seconds:state.mode==="sprint"?60:state.elapsed,date:finishedAt.toISOString()};
   const history=storage.read("monsoon-atlas-history",[]); history.unshift(attempt); storage.write("monsoon-atlas-history",history.slice(0,25));
   setPrompt("Quiz complete",`${state.score} correct · ${accuracy}%`,`Finished in ${formatTime(attempt.seconds)}. Your result has been saved.`); $("#startButton").textContent="Play again"; renderProgress(); updateBest();
   $("#endCompletedAt").textContent=new Intl.DateTimeFormat(undefined,{dateStyle:"full",timeStyle:"short"}).format(finishedAt);
@@ -186,7 +186,7 @@ function updateScore(){
   $("#accuracyValue").textContent=state.attempts?`${Math.round(state.score/state.attempts*100)}%`:"—"; $("#timerValue").textContent=formatTime(state.elapsed);
 }
 function updateBest(){
-  const history=storage.read("monsoon-atlas-history",[]).filter(x=>x.mode===state.mode); if(!history.length){ $("#bestValue").textContent="—"; return; }
+  const history=storage.read("monsoon-atlas-history",[]).filter(x=>x.mode===state.mode&&(x.quiz||"monsoon-asia")===activeQuiz.id); if(!history.length){ $("#bestValue").textContent="—"; return; }
   const best=history.sort((a,b)=>b.accuracy-a.accuracy||b.score-a.score||a.seconds-b.seconds)[0]; $("#bestValue").textContent=`${best.accuracy}%`;
 }
 function updateStreak(){
@@ -197,32 +197,38 @@ function updateStreak(){
 }
 function renderProgress(){
   const history=storage.read("monsoon-atlas-history",[]); $("#gamesPlayed").textContent=history.length; $("#averageAccuracy").textContent=history.length?`${Math.round(history.reduce((sum,x)=>sum+x.accuracy,0)/history.length)}%`:"—";
-  if(history.length){ const best=[...history].sort((a,b)=>b.accuracy-a.accuracy||b.score-a.score||a.seconds-b.seconds)[0]; $("#overallBest").textContent=`${best.accuracy}% accuracy`; $("#overallBestMeta").textContent=`${best.score} correct in ${formatTime(best.seconds)} · ${best.mode}`; }
+  if(history.length){ const best=[...history].sort((a,b)=>b.accuracy-a.accuracy||b.score-a.score||a.seconds-b.seconds)[0]; $("#overallBest").textContent=`${best.accuracy}% accuracy`; $("#overallBestMeta").textContent=`${best.score} correct in ${formatTime(best.seconds)} · ${best.quizTitle||"Monsoon Asia"} · ${best.mode}`; }
   else { $("#overallBest").textContent="No score yet"; $("#overallBestMeta").textContent="Finish a quiz to set your first record."; }
-  $("#historyList").innerHTML=history.length?history.slice(0,8).map(item=>{ const date=new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",year:"numeric"}).format(new Date(item.date)); return `<div class="history-row"><span class="history-mode">${escapeHtml(item.mode)}</span><span>${item.score} correct · ${formatTime(item.seconds)}</span><span class="history-score">${item.accuracy}%</span><span class="history-date">${date}</span></div>`; }).join(""):`<div class="empty-state">Your completed games will appear here with their score and date.</div>`;
+  $("#historyList").innerHTML=history.length?history.slice(0,8).map(item=>{ const date=new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",year:"numeric"}).format(new Date(item.date)); return `<div class="history-row"><span class="history-mode">${escapeHtml(item.mode)}</span><span><b>${escapeHtml(item.quizTitle||"Monsoon Asia")}</b> · ${item.score} correct · ${formatTime(item.seconds)}</span><span class="history-score">${item.accuracy}%</span><span class="history-date">${date}</span></div>`; }).join(""):`<div class="empty-state">Your completed games will appear here with their score and date.</div>`;
   updateStreak();
 }
 function showToast(message,success){ const toast=$("#resultToast"); toast.textContent=message; toast.classList.remove("hidden","error"); if(!success)toast.classList.add("error"); clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.classList.add("hidden"),1500); }
 
-let projection,pathGenerator,mapLayer,labelLayer;
+let projection,pathGenerator,mapLayer,labelLayer,graticuleLayer,worldFeatures=[];
 async function drawMap(){
   const svg=d3.select("#map"); projection=d3.geoMercator();
   try {
     const response=await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"); if(!response.ok)throw new Error("Map data unavailable");
-    const world=await response.json(),features=topojson.feature(world,world.objects.countries).features;
-    const quizFeatures=features.filter(feature=>countryById(feature.id));
-    const markerFeatures=COUNTRIES.filter(country=>country.marker).map(country=>({type:"Feature",geometry:{type:"Point",coordinates:country.marker}}));
-    projection.fitExtent([[12,6],[888,654]],{type:"FeatureCollection",features:[...quizFeatures,...markerFeatures]}); pathGenerator=d3.geoPath(projection);
-    svg.append("path").datum(d3.geoGraticule().step([10,10])()).attr("class","ocean-lines").attr("d",pathGenerator); mapLayer=svg.append("g"); labelLayer=svg.append("g").attr("class","labels");
-    const visible=features.filter(feature=>{ const [x,y]=pathGenerator.centroid(feature); return x>-100&&x<1000&&y>-100&&y<680; });
-    mapLayer.selectAll("path").data(visible).join("path").attr("d",pathGenerator).attr("class",feature=>countryById(feature.id)?"quiz-country":"outside-country").attr("data-id",feature=>Number(feature.id))
-      .on("click",(event,feature)=>{ const c=countryById(feature.id); if(c)handleCountryClick(c); }).on("mousemove",(event,feature)=>{ const c=countryById(feature.id); if(c)showMapTooltip(event,c); }).on("mouseleave",hideMapTooltip);
-    COUNTRIES.filter(c=>c.marker).forEach(addMarker); state.mapReady=true; $("#mapLoading").classList.add("hidden");
+    const world=await response.json(); worldFeatures=topojson.feature(world,world.objects.countries).features;
+    graticuleLayer=svg.append("path").datum(d3.geoGraticule().step([10,10])()).attr("class","ocean-lines"); mapLayer=svg.append("g"); labelLayer=svg.append("g").attr("class","labels");
+    renderMapForQuiz(); state.mapReady=true; $("#mapLoading").classList.add("hidden");
   } catch { $("#mapLoading").innerHTML=`<strong>Map data couldn't load</strong><small>Please check your connection and refresh.</small>`; }
+}
+function renderMapForQuiz(){
+  if(!worldFeatures.length||!mapLayer)return;
+  projection.rotate(activeQuiz.rotation||[0,0]);
+  const quizFeatures=worldFeatures.filter(feature=>{ const country=countryById(feature.id); return country&&!country.fitMarker; });
+  const markerFeatures=COUNTRIES.filter(country=>country.marker).map(country=>({type:"Feature",geometry:{type:"Point",coordinates:country.marker}}));
+  projection.fitExtent([[18,10],[882,650]],{type:"FeatureCollection",features:[...quizFeatures,...markerFeatures]}); pathGenerator=d3.geoPath(projection); graticuleLayer.attr("d",pathGenerator);
+  mapLayer.selectAll("*").remove(); labelLayer.selectAll("*").remove();
+  const visible=worldFeatures.filter(feature=>{ const [x,y]=pathGenerator.centroid(feature); return x>-120&&x<1020&&y>-120&&y<780; });
+  mapLayer.selectAll("path").data(visible).join("path").attr("d",pathGenerator).attr("class",feature=>countryById(feature.id)?"quiz-country":"outside-country").attr("data-id",feature=>countryById(feature.id)?Number(feature.id):null)
+    .on("click",(event,feature)=>{ const c=countryById(feature.id); if(c)handleCountryClick(c); }).on("mousemove",(event,feature)=>{ const c=countryById(feature.id); if(c)showMapTooltip(event,c); }).on("mouseleave",hideMapTooltip);
+  COUNTRIES.filter(country=>country.marker).forEach(addMarker);
 }
 function countryById(id){ return COUNTRIES.find(c=>c.id===Number(id)); }
 function addMarker(country){ const [x,y]=projection(country.marker); mapLayer.append("circle").attr("class","quiz-marker").attr("data-id",country.id).attr("cx",x).attr("cy",y).attr("r",country.name==="Maldives"?7:6).on("click",()=>handleCountryClick(country)).on("mousemove",event=>showMapTooltip(event,country)).on("mouseleave",hideMapTooltip); }
-function showMapTooltip(event,country){ if(state.active&&state.mode!=="learn")return; const wrap=$("#mapWrap").getBoundingClientRect(),tip=$("#mapTooltip"); tip.innerHTML=`<b>${country.name}</b><span>${country.capital}</span>`; tip.style.left=`${event.clientX-wrap.left+12}px`; tip.style.top=`${event.clientY-wrap.top+10}px`; tip.classList.remove("hidden"); }
+function showMapTooltip(event,country){ if(state.active&&state.mode!=="learn")return; const wrap=$("#mapWrap").getBoundingClientRect(),tip=$("#mapTooltip"); tip.innerHTML=`<b>${country.name}</b><span>${country.capital||country.region}</span>`; tip.style.left=`${event.clientX-wrap.left+12}px`; tip.style.top=`${event.clientY-wrap.top+10}px`; tip.classList.remove("hidden"); }
 function hideMapTooltip(){ $("#mapTooltip").classList.add("hidden"); }
 function getCountryNodes(country){ return [...document.querySelectorAll(`[data-id="${country.id}"]`)]; }
 function highlightCountry(country,className){ getCountryNodes(country).forEach(node=>node.classList.add(className)); }
@@ -243,6 +249,8 @@ function bindEvents(){
   $("#soundToggle").addEventListener("click",event=>{ state.sound=!state.sound; event.currentTarget.textContent=state.sound?"♪":"×"; event.currentTarget.title=state.sound?"Sound on":"Sound off"; event.currentTarget.setAttribute("aria-label",state.sound?"Turn sound off":"Turn sound on"); });
   $("#soundToggleGame").addEventListener("click",()=>$("#soundToggle").click());
   $("#toolbarLearn").addEventListener("click",()=>{ setMode("learn"); startGame(); });
+  $("#chooseQuizButton").addEventListener("click",openQuizPicker); $("#closeQuizPicker").addEventListener("click",closeQuizPicker);
+  $("#quizPicker").addEventListener("click",event=>{ if(event.target.id==="quizPicker")closeQuizPicker(); });
   $$('[data-scroll]').forEach(button=>button.addEventListener("click",()=>document.getElementById(button.dataset.scroll).scrollIntoView()));
 }
-setupConsent(); setupCountryList(); bindEvents(); renderProgress(); setMode("pin"); drawMap();
+setupConsent(); setupQuizPicker(); setupCountryList(); updateQuizCopy(); bindEvents(); renderProgress(); setMode("pin"); drawMap();
